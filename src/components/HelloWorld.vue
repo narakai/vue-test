@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <button @click="divVisible=!divVisible">Toggle visibility</button>
+    <transition name="fade">
+      <div v-if="divVisible">The div is sometimes hidden</div>
+    </transition>
+
     <p v-if="hours < 12">Good morning!</p>
     <p v-if="hours >= 12 && hours < 18">Good afternoon!</p>
     <p v-if="hours >= 18">Good evening!</p>
@@ -10,7 +15,8 @@
         Dog name is {{dog}}
       </li>
     </ul>
-    <button :type="buttonType" :disabled="buttonDisabled">Test Button</button>
+    <button :type="buttonType" :disabled="buttonDisabled" @click="increase">Test Button</button>
+    <p>You've clicked the button {{ counter }}</p> times.
     <p>have elapsed {{seconds}} seconds since you opened the page </p>
     <p>Current status {{getId(id)}}</p>
   </div>
@@ -18,7 +24,14 @@
 
 <script>
   export default {
+    props: ['color'],
+    computed: {
+      style() {
+        return {backgroundColor: this.color}
+      }
+    },
     name: 'HelloWorld',
+    // the data property on components is a function
     data() {
       return {
         msg: 'Welcome to Your Vue.js App',
@@ -28,7 +41,9 @@
         buttonType: 'submit',
         buttonDisabled: true,
         seconds: 0,
-        id: 2
+        id: 2,
+        counter: 0,
+        divVisible: true
       }
     },
     created() {
@@ -45,6 +60,9 @@
           2: 'Learning Vue'
         })[id];
         return status || 'Unknown: ' + id;
+      },
+      increase() {
+        this.counter++;
       }
     }
   }
@@ -69,4 +87,13 @@
   a {
     color: #42b983;
   }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
 </style>
